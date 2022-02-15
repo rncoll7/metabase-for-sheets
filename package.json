@@ -1,0 +1,14 @@
+{
+  "name": "metabase-for-sheets",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "login": "clasp login",
+    "push": "clasp push"
+  },
+  "dependencies": {
+    "@google/clasp": "^2.4.1",
+    "@types/google-apps-script": "^1.0.45"
+  }
+}
