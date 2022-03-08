@@ -4,10 +4,10 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "login": "clasp login",
+    "login": "clasp login --creds .client_credentials.json",
     "status": "clasp status",
-    "push": "clasp push",
-    "watch": "clasp push --watch"
+    "watch": "clasp push --watch",
+    "onInstall": "clasp run onInstall"
   },
   "dependencies": {
     "@google/clasp": "^2.4.1",

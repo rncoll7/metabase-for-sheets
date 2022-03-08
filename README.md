@@ -14,3 +14,12 @@ Currently, the add-on authenticates with Metabase by using a user account. You c
 I'm currently working on:
  - Interface response
  - Schedule job
+
+
+## Links:
+- https://github.com/google/clasp
+- https://github.com/google/clasp/blob/master/docs/run.md#prerequisites
+- https://console.cloud.google.com/apis/credentials
+- https://console.cloud.google.com/apis/credentials/consent
+- https://docs.google.com/spreadsheets/d/104Cxi5PJh2pdK2osMIeMtBWnamJIpQt6oFVpD47BPiE
+- https://script.google.com/home/projects/1qNrGXpMgntO2NTRdlTWeXvTEfRdOFA6MVgZqBqhw0a-xxhN5ui7zQw5c
