@@ -5,7 +5,9 @@
   "license": "MIT",
   "scripts": {
     "login": "clasp login",
-    "push": "clasp push"
+    "status": "clasp status",
+    "push": "clasp push",
+    "watch": "clasp push --watch"
   },
   "dependencies": {
     "@google/clasp": "^2.4.1",

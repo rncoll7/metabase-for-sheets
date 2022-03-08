@@ -1,6 +1,1 @@
-images/
-.clasp.json
-.gitignore
-package.json
-README.md
-yarn.lock
+# Only inside app/ folder
