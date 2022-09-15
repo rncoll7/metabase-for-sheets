@@ -31,15 +31,15 @@ class Metabase {
 
         const response = UrlFetchApp.fetch(questionUrl, options);
         const statusCode = response.getResponseCode();
+        const text = response.getContentText();
 
         if (statusCode == 200 || statusCode == 202) {
-            const text = response.getContentText();
             const jsonData = JSON.parse(text);
             return jsonData;
         } else if (statusCode == 401) {
             throw new UnauthorizedError('Não foi possivel importar a consulta. Metabase');
         } else {
-            throw new Error('Não foi possivel importar a consulta. Metabase');
+            throw new HttpError('Não foi possivel importar a consulta. Metabase', statusCode, text);
         }
     }
 
@@ -58,15 +58,15 @@ class Metabase {
 
         const response = UrlFetchApp.fetch(questionUrl, options);
         var statusCode = response.getResponseCode();
+        const text = response.getContentText()
 
         if (statusCode == 200 || statusCode == 202) {
-            const text = response.getContentText()
             const values = Utilities.parseCsv(text);
             return values;
         } else if (statusCode == 401) {
             throw new UnauthorizedError('Não foi possivel importar a consulta. Metabase');
         } else {
-            throw new Error('Não foi possivel importar a consulta. Metabase');
+            throw new HttpError('Não foi possivel importar a consulta. Metabase', statusCode, text);
         }
     }
 

@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "login": "clasp login --creds .client_credentials.json",
+    "autorize": "clasp login",
     "status": "clasp status",
     "watch": "clasp push --watch",
     "onInstall": "clasp run onInstall"

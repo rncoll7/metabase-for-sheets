@@ -74,11 +74,13 @@ class Core {
     static createParameters(parameters) {
         let newParameters = [];
         for (let i = 0; i < parameters.length; i++) {
-            const type = parameters[i]["type"];
-            const target = parameters[i]["target"];
             const value = parameters[i]["value"];
-            const param = Metabase.createParameter(type, target, value);
-            newParameters.push(param);
+            if(value != undefined && value != null && value != '') {
+                const type = parameters[i]["type"];
+                const target = parameters[i]["target"];
+                const param = Metabase.createParameter(type, target, value);
+                newParameters.push(param);
+            }
         }
         return newParameters;
     }
