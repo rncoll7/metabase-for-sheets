@@ -9,7 +9,7 @@
     "status": "clasp status --auth .clasprc.json",
     "watch": "clasp push --watch --auth .clasprc.json",
     "deploy": "clasp push --project .clasp.prod.json --auth .clasprc.prod.json",
-    "onInstall": "clasp run onInstall --auth .clasprc.json"
+    "debug": "clasp run --auth .clasprc.json"
   },
   "devDependencies": {
     "@google/clasp": "^2.4.1",

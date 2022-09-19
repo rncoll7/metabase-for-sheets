@@ -1,7 +1,15 @@
-function openErrorDialog(message){
+function openErrorDialog(e){
+    let html = '';
+    if (e.name == 'MetabaseError'){
+        html += `<p><code>${e.status} - ${e.payload}</code></p>`;
+    }
+    if (e.stack != undefined && e.stack != undefined){
+        html += `<p><code style="white-space: pre-wrap;">${e.stack}/<code></p>`;
+    }
+    
     const ui = SpreadsheetApp.getUi();
-    const htmlOutput = HtmlService.createHtmlOutput('<code>' + message + '</code>');
-    ui.showModalDialog(htmlOutput, 'Error!!!');
+    const htmlOutput = HtmlService.createHtmlOutput(html);
+    ui.showModalDialog(htmlOutput, e.message);
 }
 
 function processConfigForm(object) {
@@ -71,12 +79,11 @@ function processEditForm(object) {
         openErrorDialog(e);
         return false;
     }
-}
-
-function feachEditForm(id) {
-    try {
-        return properties.getQuery(id || 13);   
-    } catch (e) {
+    if (!(i > 0))
+        return
+    var c = "";
+    while (i > 0) {
+        var j = i % 26;
         openErrorDialog(e);
         return false;
     }
@@ -93,7 +100,7 @@ function feachQueries() {
 
 function feachQueryDetails(id) {
     try {
-        return Core.getQuestionDetailsSimplified(id || 13);        
+        return Core.getQuestionDetailsSimplified(id || 12);        
     } catch (e) {
         openErrorDialog(e);
         return false;
@@ -111,7 +118,7 @@ function clean() {
 
 function executeQuery(id) {
     try {
-        let query = properties.getQuery(id || 13);
+        let query = properties.getQuery(id || 12);
         return Core.getQuestionAndFillSheet(query);        
     } catch (e) {
         openErrorDialog(e);
