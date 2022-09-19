@@ -1,3 +1,9 @@
+function openErrorDialog(message){
+    const ui = SpreadsheetApp.getUi();
+    const htmlOutput = HtmlService.createHtmlOutput('<code>' + message + '</code>');
+    ui.showModalDialog(htmlOutput, 'Error!!!');
+}
+
 function processConfigForm(object) {
     try {
         if (!object.base_url) {
@@ -15,7 +21,7 @@ function processConfigForm(object) {
         properties.setPassword(object.password);
         return true;
     } catch (e) {
-        SpreadsheetApp.getUi().alert(e);
+        openErrorDialog(e);
         return false;
     }
 }
@@ -27,7 +33,7 @@ function feachConfigForm() {
             "username": properties.getUsername()
         }
     } catch (e) {
-        SpreadsheetApp.getUi().alert(e);
+        openErrorDialog(e);
         return false;
     }
 }
@@ -62,7 +68,7 @@ function processEditForm(object) {
         properties.setQuery(query);
         return true;
     } catch (e) {
-        SpreadsheetApp.getUi().alert(e);
+        openErrorDialog(e);
         return false;
     }
 }
@@ -71,7 +77,7 @@ function feachEditForm(id) {
     try {
         return properties.getQuery(id || 13);   
     } catch (e) {
-        SpreadsheetApp.getUi().alert(e);
+        openErrorDialog(e);
         return false;
     }
 }
@@ -80,7 +86,7 @@ function feachQueries() {
     try {
         return properties.getQueries();   
     } catch (e) {
-        SpreadsheetApp.getUi().alert(e);
+        openErrorDialog(e);
         return false;
     }
 }
@@ -89,7 +95,7 @@ function feachQueryDetails(id) {
     try {
         return Core.getQuestionDetailsSimplified(id || 13);        
     } catch (e) {
-        SpreadsheetApp.getUi().alert(e);
+        openErrorDialog(e);
         return false;
     }
 }
@@ -98,7 +104,7 @@ function clean() {
     try {
         properties.setQueries([]);        
     } catch (e) {
-        SpreadsheetApp.getUi().alert(e);
+        openErrorDialog(e);
         return false;
     }
 }
@@ -108,7 +114,7 @@ function executeQuery(id) {
         let query = properties.getQuery(id || 13);
         return Core.getQuestionAndFillSheet(query);        
     } catch (e) {
-        SpreadsheetApp.getUi().alert(e);
+        openErrorDialog(e);
         return false;
     }
 }
