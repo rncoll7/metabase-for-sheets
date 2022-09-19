@@ -71,7 +71,38 @@ class Metabase {
     }
 
     static createParameter(type, target, value) {
-        return {"type": type, "target": ["variable", ["template-tag", target]], "value": value}
+        const _type = {
+            'id'                     :'id',
+            'boolean'                :'boolean',
+            'category'               :'category',
+            'location/city'          :'location',
+            'location/country'       :'location',
+            'location/state'         :'location',
+            'location/zip_code'      :'location',
+            'date'                   :'date',
+            'date/all-options'       :'date',
+            'date/month-year'        :'date',
+            'date/quarter-year'      :'date',
+            'date/range'             :'date',
+            'date/relative'          :'date',
+            'date/single'            :'date',
+            'number'                 :'number',
+            'number/!='              :'number',
+            'number/<='              :'number',
+            'number/='               :'number',
+            'number/>='              :'number',
+            'number/between'         :'number',
+            'string/!='              :'text',
+            'string/='               :'text',
+            'string/contains'        :'text',
+            'string/does-not-contain':'text',
+            'string/ends-with'       :'text',
+            'string/starts-with'     :'text',
+            'text'                   :'text'
+        }[type] || type;
+
+
+        return {"type": _type, "target": target, "value": value}
     }
 
 }

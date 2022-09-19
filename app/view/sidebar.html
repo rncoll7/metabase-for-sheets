@@ -354,16 +354,15 @@
             element.innerHTML = '';
             for (let i = 0; i < parameters.length; i++) {
                 const name = parameters[i]["name"];
-                const target = parameters[i]["target"];
+                const slug = parameters[i]["slug"];
                 const type = parameters[i]["type"];
-                const widget = parameters[i]["widget-type"];
                 const value = parameters[i]["value"] || '';
 
                 element.innerHTML += `
                 <div class="media text-muted pt-3">
                     <div class="media-body mb-0 small lh-125">
-                        <label for="${target}" class="form-label">${name}</label>
-                        <input type="text" class="form-control" id="${target}" name="${target}" value="${value}">
+                        <label for="${slug}" class="form-label">${name}</label>
+                        <input type="text" class="form-control" id="${slug}" name="${slug}" value="${value}">
                     </div>
                 </div>`
             }

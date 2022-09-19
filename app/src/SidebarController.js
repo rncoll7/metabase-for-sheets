@@ -44,16 +44,16 @@ function processEditForm(object) {
     const parameters = JSON.parse(object.parameters || '[]');
     for (let i = 0; i < parameters.length; i++) {
         let parameter = parameters[i];
-        parameter.value = object[parameter.target]
+        parameter.value = object[parameter.slug];
         query.parameters.push(parameter);
     }
 
     properties.setQuery(query);
-    return true
+    return {query: query, object: object};
 }
 
 function feachEditForm(id) {
-    return properties.getQuery(id)
+    return properties.getQuery(id || 7857)
 }
 
 function feachQueries() {
@@ -61,7 +61,7 @@ function feachQueries() {
 }
 
 function feachQueryDetails(id) {
-    return Core.getQuestionDetailsSimplified(id);
+    return Core.getQuestionDetailsSimplified(id || 7857);
 }
 
 function clean() {

@@ -106,19 +106,7 @@ class Core {
 
         var id = jsonData["id"];
         var name = jsonData["name"];
-        var values = jsonData["dataset_query"]["native"]["template-tags"];
-
-        let parameters = [];
-        for (const [key, value] of Object.entries(values)) {
-            const object = {
-                target: key || value["name"],
-                name: value["display-name"],
-                type: value["type"],
-                "widget-type": value["widget-type"],
-            };
-            parameters.push(object);
-        }
-
+        var parameters = jsonData["parameters"];
         return {id: id, name: name, parameters: parameters};
     }
 
