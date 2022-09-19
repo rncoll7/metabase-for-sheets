@@ -1,5 +1,6 @@
 node_modules
 .idea
 .clasprc.json
+.clasprc.prod.json
 .client_credentials.json
 yarn-error.log
