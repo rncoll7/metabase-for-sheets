@@ -10,7 +10,7 @@ class Properties {
         this.script = PropertiesService.getScriptProperties();
         this.user = PropertiesService.getUserProperties();
         this.document = PropertiesService.getDocumentProperties();
-        this.local = this.document.getProperty('local_config') || false;
+        this.local = this.document.getProperty('local_config') || true;
     }
 
     getProperty(name) {
