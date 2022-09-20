@@ -122,6 +122,23 @@ class Properties {
         })()
     }
 
+    deleteQuery(uuid) {
+        const queries = this.getQueries();
+        const index = (function () {
+            for (var i = 0; i < queries.length; i++) {
+                if (queries[i].uuid == uuid) {
+                    return i;
+                }
+            }
+        })()
+        if (index > -1) {
+            queries.splice(index, 1);
+            this.setQueries(queries);
+            return true;
+        }
+        return false;
+    }
+
     setQuery(query) {
         const uuid = query.uuid;
         const queries = this.getQueries();
@@ -160,3 +177,11 @@ class Properties {
 }
 
 let properties = new Properties();
+
+
+function deleteTest() {
+    const queries = properties.getQueries();
+    const uuid = '7795d6c4-ce96-4009-9879-015452902197'
+    const ok = properties.deleteQuery(uuid);
+    return ok;
+}

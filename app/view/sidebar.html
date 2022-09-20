@@ -99,54 +99,8 @@
                         <div id="query-parameters">
                         </div>
 
-                        <!--
-                        <div class="media text-muted pt-3">
-                            <div class="media-body mb-0 small lh-125">
-                                <label for="date" class="form-label">Data</label>
-                                <input type="text" class="form-control" id="date" placeholder="00/00/0000">
-                                <script type="text/javascript">
-                                $('document').ready(function(){
-                                    $('input#date').datepicker({
-                                    language: "pt-BR"
-                                    });
-                                });
-                                </script>
-                            </div>
-                        </div>
-                        <div class="media text-muted pt-3">
-                            <div class="media-body mb-0 small lh-125">
-                            <label for="password" class="form-label">Select</label>
-                            <select class="form-select" id="country" required="">
-                                <option value="">Choose...</option>
-                                <option>Option 2</option>
-                                <option>Option 3</option>
-                            </select>
-                            </div>
-                        </div>
-                        <div class="media text-muted pt-3">
-                            <div class="media-body mb-0 small lh-125">
-                                <div>Vincular configurações ao..</div>
-                                <div class="form-check">
-                                <input id="save-location" name="paymentMethod" type="radio" class="form-check-input" checked="" required="">
-                                <label class="form-check-label" for="save-location">usuario</label>
-                                </div>
-                                <div class="form-check">
-                                <input id="save-location" name="paymentMethod" type="radio" class="form-check-input" checked="" required="">
-                                <label class="form-check-label" for="save-location">documento</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="media text-muted pt-3">
-                            <div class="media-body mb-0 small lh-125">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="user-terms">
-                                <label class="form-check-label" for="user-terms">Aceito os termos de uso</label>
-                            </div>
-                            </div>
-                        </div>
-                        -->
-
                         <small class="d-block text-right mt-3">
+                            <a id="delete-btn" href="#" onclick="deleteQuery(this);" class="p-2" style="color: red;">Excluir</a>
                             <input type="submit" value="Salvar">
                         </small>
                     </form>
@@ -324,6 +278,22 @@
                 .feachQueryDetails(query_id);
         }
 
+        function deleteQuery() {
+            const element = document.querySelector('#uuid');
+            if (element == null || element == undefined) return;
+            const uuid = element.value;
+
+            google.script.run
+                .withSuccessHandler(function(deleted) {
+                    if(deleted){
+                        closeEdit();
+                        openQueries();
+                    }
+                })
+                .withFailureHandler(console.error)
+                .deleteQuery(uuid);
+        }
+
         function closeEdit() {
             animate('#edit', 'fadeOutRight');
         }
@@ -340,12 +310,15 @@
         }
 
         function fillQueryForm(object) {
-            const query_id = document.querySelector('#query_id').value;
-            if (query_id !== "" && query_id != null && query_id != undefined && query_id != object.id && object.id != undefined) {
-                return;
+            console.log(object);
+            
+            if (object.uuid) {
+                document.querySelector('#delete-btn').classList.remove('hide');
+            } else {
+                document.querySelector('#delete-btn').classList.add('hide');
             }
 
-            document.querySelector('#uuid').value = object.uuid;
+            document.querySelector('#uuid').value = object.uuid || '';
             document.querySelector('#query_id').value = object.id;
             document.querySelector('#name').value = object.name || '';
             if (object.sheet || object.id == undefined) document.querySelector('#sheet').value = object.sheet || '';

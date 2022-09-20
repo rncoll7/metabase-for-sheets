@@ -91,6 +91,22 @@ function feachEditForm(uuid) {
     }
 }
 
+function deleteQuery(uuid) {
+    try {
+        const ui = SpreadsheetApp.getUi();
+        var result = ui.alert(`Confirmar deleção? (${uuid})`, ui.ButtonSet.YES_NO);
+
+        if (result == ui.Button.YES) {
+            return properties.deleteQuery(uuid);
+        } else {
+            return false;
+        } 
+    } catch (e) {
+        openErrorDialog(e);
+        return false;
+    }
+}
+
 function feachQueries() {
     try {
         return properties.getQueries();   
