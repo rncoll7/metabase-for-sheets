@@ -59,6 +59,7 @@ function processEditForm(object) {
         }
     
         query = {
+            "uuid": object.uuid || Utilities.getUuid(),
             "id": object.query_id,
             "name": object.name,
             "sheet": object.sheet,
@@ -79,11 +80,12 @@ function processEditForm(object) {
         openErrorDialog(e);
         return false;
     }
-    if (!(i > 0))
-        return
-    var c = "";
-    while (i > 0) {
-        var j = i % 26;
+}
+
+function feachEditForm(uuid) {
+    try {
+        return properties.getQuery(uuid);   
+    } catch (e) {
         openErrorDialog(e);
         return false;
     }
@@ -100,7 +102,7 @@ function feachQueries() {
 
 function feachQueryDetails(id) {
     try {
-        return Core.getQuestionDetailsSimplified(id || 12);        
+        return Core.getQuestionDetailsSimplified(id);        
     } catch (e) {
         openErrorDialog(e);
         return false;
@@ -116,9 +118,9 @@ function clean() {
     }
 }
 
-function executeQuery(id) {
+function executeQuery(uuid) {
     try {
-        let query = properties.getQuery(id || 12);
+        let query = properties.getQuery(uuid);
         return Core.getQuestionAndFillSheet(query);        
     } catch (e) {
         openErrorDialog(e);

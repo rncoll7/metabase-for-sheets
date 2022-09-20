@@ -111,11 +111,11 @@ class Properties {
         this.document.setProperty('QUERIES', JSON.stringify(queries));
     }
 
-    getQuery(id) {
+    getQuery(uuid) {
         const queries = this.getQueries();
         return (function () {
             for (var i = 0; i < queries.length; i++) {
-                if (queries[i].id == id) {
+                if (queries[i].uuid == uuid) {
                     return queries[i];
                 }
             }
@@ -123,11 +123,11 @@ class Properties {
     }
 
     setQuery(query) {
-        const id = query.id;
+        const uuid = query.uuid;
         const queries = this.getQueries();
         const index = (function () {
             for (var i = 0; i < queries.length; i++) {
-                if (queries[i].id == id) {
+                if (queries[i].uuid == uuid) {
                     return i;
                 }
             }
@@ -143,6 +143,20 @@ class Properties {
     nedAuth() {
         return !(this.hasBaseUrl() && this.hasUsername() && this.hasPassword());
     }
+
+    updateStorage(){
+        let version = this.document.getProperty('storage-version') || 0;
+        
+        if (version == 0) {
+            let queries = this.getQueries();
+            for (var i = 0; i < queries.length; i++) {
+                queries[i].uuid = Utilities.getUuid();
+            }
+            this.setQueries(queries);
+            version = 1;
+        }
+    }
+
 }
 
 let properties = new Properties();

@@ -94,7 +94,8 @@
                             </div>
                         </div>
 
-                        <input type="hidden" id="parameters" name="parameters" placeholder="auto">
+                        <input type="hidden" id="uuid" name="uuid">
+                        <input type="hidden" id="parameters" name="parameters">
                         <div id="query-parameters">
                         </div>
 
@@ -243,8 +244,8 @@
                                     <div class="d-flex justify-content-between align-items-center w-100">
                                         <strong class="text-gray-dark">${object[i].name}</strong>
                                         <span style="font-family: sans-serif;">
-                                          <a href="#" onclick="closeQueries(this);openEdit(this, ${object[i].id});">✎</a>
-                                          <a href="#" onclick="executeQuery(this, ${object[i].id});">►</a>
+                                          <a href="#" onclick="closeQueries(this);openEdit(this, '${object[i].uuid}');">✎</a>
+                                          <a href="#" onclick="executeQuery(this, '${object[i].uuid}');">►</a>
                                         </span>
                                         <span class="load hide">
                                           <span></span>
@@ -265,8 +266,8 @@
 
         openQueries();
 
-        function executeQuery(element, id) {
-            console.log(element, id);
+        function executeQuery(element, uuid) {
+            console.log(element, uuid);
 
             let success = console.log;
             let failure = console.error;
@@ -293,20 +294,20 @@
             google.script.run
                 .withSuccessHandler(success)
                 .withFailureHandler(failure)
-                .executeQuery(id);
+                .executeQuery(uuid);
         }
 
         // Edit
-        function openEdit(element, id) {
+        function openEdit(element, uuid) {
             animate('#edit', 'fadeInRight');
 
-            if (id != undefined && id != null) {
+            if (uuid != undefined && uuid != null) {
                 google.script.run
                     .withSuccessHandler(function (object) {
                         fillQueryForm(object);
                     })
                     .withFailureHandler(console.error)
-                    .feachEditForm(id);
+                    .feachEditForm(uuid);
             } else {
                 fillQueryForm({});
             }
@@ -344,6 +345,7 @@
                 return;
             }
 
+            document.querySelector('#uuid').value = object.uuid;
             document.querySelector('#query_id').value = object.id;
             document.querySelector('#name').value = object.name || '';
             if (object.sheet || object.id == undefined) document.querySelector('#sheet').value = object.sheet || '';

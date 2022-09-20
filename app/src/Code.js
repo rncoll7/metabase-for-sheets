@@ -3,15 +3,19 @@ function onInstall() {
 }
 
 function onOpen() {
-
-    var ui = SpreadsheetHelper.getUi();
-    if (ui != undefined && ui != null) {
-        ui.createMenu("Metabase Test")
-            .addItem("Abrir..", "openSideBar")
-            .addSeparator()
-            .addItem("Importar Consulta", "importQuestion")
-            .addItem("Importar todas as Consultas na Planilha", "importAllQuestions")
-            .addToUi();
+    try {
+        properties.updateStorage();
+        var ui = SpreadsheetHelper.getUi();
+        if (ui != undefined && ui != null) {
+            ui.createMenu("Metabase Test")
+                .addItem("Abrir..", "openSideBar")
+                .addSeparator()
+                .addItem("Importar Consulta", "importQuestion")
+                .addItem("Importar todas as Consultas na Planilha", "importAllQuestions")
+                .addToUi();
+        }
+    } catch(e){
+        openErrorDialog(e);
     }
 }
 
