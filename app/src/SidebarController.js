@@ -94,7 +94,7 @@ function feachEditForm(uuid) {
 function deleteQuery(uuid) {
     try {
         const ui = SpreadsheetApp.getUi();
-        var result = ui.alert(`Confirmar deleção? (${uuid})`, ui.ButtonSet.YES_NO);
+        var result = ui.alert(`Confirmar deleção?`, ui.ButtonSet.YES_NO);
 
         if (result == ui.Button.YES) {
             return properties.deleteQuery(uuid);

@@ -311,11 +311,13 @@
 
         function fillQueryForm(object) {
             console.log(object);
-            
+
             if (object.uuid) {
                 document.querySelector('#delete-btn').classList.remove('hide');
+                document.querySelector('#query_id').readOnly = true;
             } else {
                 document.querySelector('#delete-btn').classList.add('hide');
+                document.querySelector('#query_id').readOnly = false;
             }
 
             document.querySelector('#uuid').value = object.uuid || '';
