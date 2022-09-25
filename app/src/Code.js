@@ -48,6 +48,11 @@ class Core {
         const baseUrl = properties.getBaseUrl();
         const username = properties.getUsername();
         const password = properties.getPassword();
+
+        if(!baseUrl || !username || !password) {
+            throw new Error("Por favor verificar configurações!");
+        }
+
         const token = Metabase.getToken(baseUrl, username, password);
         properties.setToken(token);
         return token;
