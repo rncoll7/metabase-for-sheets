@@ -67,15 +67,18 @@ class Core {
         const baseUrl = properties.getBaseUrl();
         let token = properties.getToken();
         const parameters = this.createParameters(query.parameters);
-        try {
-            if (token == undefined || token == null) token = this.getToken();
-            return Metabase.getQuestionAsCsv(baseUrl, token, query.id, parameters);
-        } catch (e) {
-            if (e.name == "UnauthorizedError") {
-                token = this.getToken();
+
+        let attempt = 0;
+        while(++attempt <= 2){
+            try {
+                if (token == undefined || token == null) token = this.getToken();
                 return Metabase.getQuestionAsCsv(baseUrl, token, query.id, parameters);
-            } else {
-                throw e;
+            } catch (e) {
+                if (e.name == "UnauthorizedError") {
+                    token = null;
+                } else {
+                    throw e;
+                }
             }
         }
     }
