@@ -4,7 +4,7 @@ function importQuestion() {
     if (metabaseQuestionNum != 'cancel' && !isNaN(metabaseQuestionNum)) {
 
         try {
-            Core.getQuestionAndFillSheet({"id": metabaseQuestionNum});
+            Core.getQuestionAndFillSheet({"id": metabaseQuestionNum, "parameters": []});
             Core.logSuccess('importQuestion', {"metabaseQuestionNum": metabaseQuestionNum});
             SpreadsheetHelper.alert('Question ' + metabaseQuestionNum + ' successfully imported.');
         } catch (e) {
@@ -53,7 +53,7 @@ function importAllQuestions() {
                 var sheetName = questions[i].sheetName;
 
                 try {
-                    Core.getQuestionAndFillSheet({"id": metabaseQuestionNum, "sheet": sheetName});
+                    Core.getQuestionAndFillSheet({"id": metabaseQuestionNum, "sheet": sheetName, "parameters": []});
                     Core.logSuccess('importAllQuestions', {"metabaseQuestionNum": metabaseQuestionNum});
                     htmlOutput.append(`<li>${metabaseQuestionNum}: Ok</li>`);
                 } catch (e) {
