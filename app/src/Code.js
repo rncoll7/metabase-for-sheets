@@ -14,7 +14,7 @@ function onOpen() {
                 .addItem("Importar todas as Consultas na Planilha", "importAllQuestions")
                 .addToUi();
         }
-    } catch(e){
+    } catch (e) {
         openErrorDialog(e);
     }
 }
@@ -49,7 +49,7 @@ class Core {
         const username = properties.getUsername();
         const password = properties.getPassword();
 
-        if(!baseUrl || !username || !password) {
+        if (!baseUrl || !username || !password) {
             throw new Error("Por favor verificar configurações!");
         }
 
@@ -59,20 +59,29 @@ class Core {
     }
 
     static getQuestionAndFillSheet(query) {
-        var values = this.getQuestionAsCsv(query);
+        var values = this.getQuestion(query);
+        this.fillSheet(values, query);
+    }
+
+    static getQuestionAndFillSheetLegacy(query) {
+        var values = this.getQuestion(query, "csv");
         this.fillSheetFromCsv(values, query);
     }
 
-    static getQuestionAsCsv(query) {
+    static getQuestion(query, output = "json") {
         const baseUrl = properties.getBaseUrl();
         let token = properties.getToken();
         const parameters = this.createParameters(query.parameters);
 
         let attempt = 0;
-        while(++attempt <= 2){
+        while (++attempt <= 2) {
             try {
                 if (token == undefined || token == null) token = this.getToken();
-                return Metabase.getQuestionAsCsv(baseUrl, token, query.id, parameters);
+                if (output == "csv") {
+                    return Metabase.getQuestionAsCsv(baseUrl, token, query.id, parameters);
+                } else {
+                    return Metabase.getQuestion(baseUrl, token, query.id, parameters);
+                }
             } catch (e) {
                 if (e.name == "UnauthorizedError") {
                     token = null;
@@ -87,7 +96,7 @@ class Core {
         let newParameters = [];
         for (let i = 0; i < parameters.length; i++) {
             const value = parameters[i]["value"];
-            if(value != undefined && value != null && value != '') {
+            if (value != undefined && value != null && value != '') {
                 const type = parameters[i]["type"];
                 const target = parameters[i]["target"];
                 const param = Metabase.createParameter(type, target, value);
@@ -119,7 +128,7 @@ class Core {
         var id = jsonData["id"];
         var name = jsonData["name"];
         var parameters = jsonData["parameters"];
-        return {id: id, name: name, parameters: parameters};
+        return { id: id, name: name, parameters: parameters };
     }
 
     static fillSheetFromCsv(values, query) {
@@ -127,13 +136,34 @@ class Core {
         const rows = values;
         const header = rows[0];
 
-        console.log(query.range);
-
         new Range(1, header.length, null, null)
             .toSheetRange(sheet)
-            .clear({contentsOnly: true});
+            .clear({ contentsOnly: true });
         new Range(1, header.length, 1, rows.length)
             .toSheetRange(sheet)
+            .setValues(rows);
+    }
+
+    static fillSheet(values, query) {
+        const sheet = SpreadsheetHelper.getSheet(query.sheet);
+        const cols = values.data.cols;
+        const rows = values.data.rows;
+        const types = [];
+
+        const headers = [];
+        for (let i = 0; i < cols.length; i++){
+            const col = cols[i];
+            headers.push(col.display_name);
+            types.push(col.effective_type);
+        }
+        new Range(1, headers.length, 1, 1)
+            .toSheetRange(sheet)
+            .clear({ contentsOnly: true })
+            .setValues([headers]);
+
+        new Range(1, headers.length, 2, rows.length+1)
+            .toSheetRange(sheet)
+            .clear({ contentsOnly: true })
             .setValues(rows);
     }
 

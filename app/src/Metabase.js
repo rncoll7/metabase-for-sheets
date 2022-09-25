@@ -70,6 +70,33 @@ class Metabase {
         }
     }
 
+    static getQuestion(baseUrl, token, questionNumber, parameters) {
+        const questionUrl = `${baseUrl}/api/card/${questionNumber}/query`;
+
+        const options = {
+            "method": "post",
+            "headers": {
+                "Content-Type": "application/json",
+                "X-Metabase-Session": token
+            },
+            "muteHttpExceptions": true,
+            "payload": JSON.stringify({"parameters": parameters })
+        };
+
+        const response = UrlFetchApp.fetch(questionUrl, options);
+        var statusCode = response.getResponseCode();
+        const text = response.getContentText()
+
+        if (statusCode == 200 || statusCode == 202) {
+            const values = JSON.parse(text);
+            return values;
+        } else if (statusCode == 401) {
+            throw new UnauthorizedError('Não foi possivel importar a consulta. Metabase');
+        } else {
+            throw new HttpError('Não foi possivel importar a consulta. Metabase', statusCode, text);
+        }
+    }
+
     static createParameter(type, target, value) {
         const _type = {
             'id'                     :'id',
