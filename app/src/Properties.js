@@ -7,7 +7,7 @@
 class Properties {
 
     constructor() {
-        this.script = PropertiesService.getScriptProperties();
+        // this.script = PropertiesService.getScriptProperties();
         this.user = PropertiesService.getUserProperties();
         this.document = PropertiesService.getDocumentProperties();
         this.local = this.document.getProperty('local_config') || true;
