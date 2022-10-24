@@ -5,7 +5,10 @@ class Metabase {
         const options = {
             "method": "post",
             "headers": {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Cookie": "metabase.TIMEOUT=alive",
+                "Connection": "keep-alive",
+                "Keep-Alive": "timeout=7200, max=1000"
             },
             "payload": JSON.stringify({
                 username: username,
@@ -24,7 +27,10 @@ class Metabase {
         const options = {
             "method": "get",
             "headers": {
-                "X-Metabase-Session": token
+                "X-Metabase-Session": token,
+                "Cookie": "metabase.TIMEOUT=alive",
+                "Connection": "keep-alive",
+                "Keep-Alive": "timeout=7200, max=1000"
             },
             "muteHttpExceptions": true
         };
@@ -50,10 +56,13 @@ class Metabase {
             "method": "post",
             "headers": {
                 "Content-Type": "application/x-www-form-urlencoded",
-                "X-Metabase-Session": token
+                "X-Metabase-Session": token,
+                "Cookie": "metabase.TIMEOUT=alive",
+                "Connection": "keep-alive",
+                "Keep-Alive": "timeout=7200, max=1000"
             },
             "muteHttpExceptions": true,
-            "payload": {"parameters": JSON.stringify(parameters)}
+            "payload": {"ignore_cache": false, "collection_preview": false, "parameters": JSON.stringify(parameters)}
         };
 
         const response = UrlFetchApp.fetch(questionUrl, options);
@@ -77,10 +86,13 @@ class Metabase {
             "method": "post",
             "headers": {
                 "Content-Type": "application/json",
-                "X-Metabase-Session": token
+                "X-Metabase-Session": token,
+                "Cookie": "metabase.TIMEOUT=alive",
+                "Connection": "keep-alive",
+                "Keep-Alive": "timeout=7200, max=1000"
             },
             "muteHttpExceptions": true,
-            "payload": JSON.stringify({"parameters": parameters })
+            "payload": JSON.stringify({ "ignore_cache": false, "collection_preview": false, "parameters": parameters })
         };
 
         const response = UrlFetchApp.fetch(questionUrl, options);
