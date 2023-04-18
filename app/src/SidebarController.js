@@ -15,8 +15,8 @@ function openErrorDialog(e){
         console.error({
             success: false,
             function: 'openErrorDialog',
-            inputs: e,
-            error: error,
+            inputs: {message: e.message, stack: e.stack},
+            error: {message: error.message, stack: error.stack},
         });
     }
 }

@@ -20,7 +20,7 @@ class Properties {
             console.error({
                 success: false,
                 function: 'Properties.constructor',
-                error: error,
+                error: {message: error.message, stack: error.stack},
             });
         }
     }
