@@ -180,7 +180,12 @@ class Properties {
 
 }
 
-let properties = new Properties();
+let properties
+try {
+    properties = new Properties();
+} catch (e) {
+    openErrorDialog(e);
+}
 
 
 function deleteTest() {
