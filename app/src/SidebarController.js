@@ -6,10 +6,19 @@ function openErrorDialog(e){
     if (e.stack != undefined && e.stack != undefined){
         html += `<p><code style="white-space: pre-wrap;">${e.stack}/<code></p>`;
     }
-    
-    const ui = SpreadsheetApp.getUi();
-    const htmlOutput = HtmlService.createHtmlOutput(html);
-    ui.showModalDialog(htmlOutput, e.message);
+
+    try {
+        const ui = SpreadsheetApp.getUi();
+        const htmlOutput = HtmlService.createHtmlOutput(html);
+        ui.showModalDialog(htmlOutput, e.message);
+    } catch (error){
+        console.error({
+            success: false,
+            function: 'openErrorDialog',
+            inputs: e,
+            error: error,
+        });
+    }
 }
 
 function processConfigForm(object) {
