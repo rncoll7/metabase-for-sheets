@@ -7,13 +7,21 @@
 class Properties {
 
     constructor() {
-        this.document = PropertiesService.getDocumentProperties();
-        this.local = this.document.getProperty('local_config') || true;
         try {
-            this.user = PropertiesService.getUserProperties();
-        } catch (ignore) {
-            this.user = null
-            this.local = true
+            this.document = PropertiesService.getDocumentProperties();
+            this.local = this.document.getProperty('local_config') || true;
+            try {
+                this.user = PropertiesService.getUserProperties();
+            } catch (ignore) {
+                this.user = null
+                this.local = true
+            }
+        } catch (error){
+            console.error({
+                success: false,
+                function: 'Properties.constructor',
+                error: error,
+            });
         }
     }
 
@@ -180,12 +188,7 @@ class Properties {
 
 }
 
-let properties
-try {
-    properties = new Properties();
-} catch (e) {
-    openErrorDialog(e);
-}
+let properties = new Properties();
 
 
 function deleteTest() {
