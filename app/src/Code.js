@@ -1,5 +1,12 @@
 function onInstall() {
     onOpen();
+
+    if (ScriptApp.getProjectTriggers().length <= 0) {
+        ScriptApp.newTrigger('runTriggers')
+            .timeBased()
+            .everyHours(1)
+            .create();
+    }
 }
 
 function onOpen() {
@@ -23,6 +30,25 @@ function onOpen() {
 function openSideBar() {
     var html = HtmlService.createTemplateFromFile("view/sidebar").evaluate();
     SpreadsheetApp.getUi().showSidebar(html);
+}
+
+function runTriggers(){
+    const currentHour = new Date().getHours() + (new Date().getTimezoneOffset()/60-3);
+    properties.getTriggers().forEach(trigger => {
+        console.log(currentHour, trigger.hour, trigger.uuid);
+        if(currentHour === trigger.hour){
+            let spreadsheet =  SpreadsheetApp.openById(trigger.spreadsheetId);
+            PropertiesService.getDocumentProperties(spreadsheet)
+
+            try {
+                let query = properties.getQuery(trigger.uuid);
+                return Core.getQuestionAndFillSheet(query);
+            } catch (e) {
+                openErrorDialog(e);
+                return false;
+            }
+        }
+    });
 }
 
 class Core {

@@ -1,9 +1,9 @@
 function openErrorDialog(e){
     let html = '';
-    if (e.name == 'MetabaseError'){
+    if (e.name === 'MetabaseError'){
         html += `<p><code>${e.status} - ${e.payload}</code></p>`;
     }
-    if (e.stack != undefined && e.stack != undefined){
+    if (e.stack != null){
         html += `<p><code style="white-space: pre-wrap;">${e.stack}/<code></p>`;
     }
 
@@ -73,6 +73,8 @@ function processEditForm(object) {
             "name": object.name,
             "sheet": object.sheet,
             "range": object.range,
+            "hour": object.hour,
+            "active": object.active === 'on',
             "parameters": []
         }
     
@@ -84,7 +86,13 @@ function processEditForm(object) {
         }
     
         properties.setQuery(query);
-        return true;
+        if (query.active) {
+            properties.setTrigger({uuid: query.uuid, hour: query.hour,
+                                   spreadsheetId: SpreadsheetApp.getActiveSpreadsheet().getId()});
+        } else {
+            properties.deleteTrigger(query.uuid);
+        }
+        return query;
     } catch (e) {
         openErrorDialog(e);
         return false;
@@ -105,7 +113,7 @@ function deleteQuery(uuid) {
         const ui = SpreadsheetApp.getUi();
         var result = ui.alert(`Confirmar deleção?`, ui.ButtonSet.YES_NO);
 
-        if (result == ui.Button.YES) {
+        if (result === ui.Button.YES) {
             return properties.deleteQuery(uuid);
         } else {
             return false;

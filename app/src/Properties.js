@@ -8,6 +8,7 @@ class Properties {
 
     constructor() {
         try {
+            this.script = PropertiesService.getScriptProperties();
             this.document = PropertiesService.getDocumentProperties();
             this.local = this.document.getProperty('local_config') || true;
             try {
@@ -169,6 +170,36 @@ class Properties {
         this.setQueries(queries);
     }
 
+
+    // Triggers
+    getTriggers() {
+
+        let triggers = [];
+        for (const [key, value] of Object.entries(this.script.getProperties())) {
+            if (key.indexOf('TRIGGER_') > -1) {
+                triggers.push(JSON.parse(value));
+            }
+        }
+        if (triggers != null) {
+            return triggers;
+        } else {
+            return [];
+        }
+    }
+
+    getTrigger(uuid) {
+        return this.script.getProperty(`TRIGGER_${uuid}`);
+    }
+
+    deleteTrigger(uuid) {
+        this.script.deleteProperty(`TRIGGER_${uuid}`);
+        return true;
+    }
+
+    setTrigger(trigger) {
+        this.script.setProperty(`TRIGGER_${trigger.uuid}`, JSON.stringify(trigger));
+    }
+
     nedAuth() {
         return !(this.hasBaseUrl() && this.hasUsername() && this.hasPassword());
     }
@@ -196,4 +227,9 @@ function deleteTest() {
     const uuid = '7795d6c4-ce96-4009-9879-015452902197'
     const ok = properties.deleteQuery(uuid);
     return ok;
+}
+
+
+function test(){
+    properties.getScripttProperty()
 }
