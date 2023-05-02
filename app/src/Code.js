@@ -28,18 +28,21 @@ function openSideBar() {
 
 function runTriggers(){
     const currentHour = new Date().getHours() + (new Date().getTimezoneOffset()/60-3);
-    properties.getTriggers().forEach(trigger => {
-        console.log(currentHour, trigger.hour, trigger.uuid, trigger.spreadsheetId);
-        if(currentHour === parseInt(trigger.hour)){
-            const _trigger = ScriptApp.newTrigger("runTrigger").timeBased()
-                .after(5 * 1000)
+    let i = 1;
+    for (const trigger of properties.getTriggers()){
+        if(currentHour === parseInt(trigger.hour)) {
+            const event = ScriptApp.newTrigger("runTrigger").timeBased()
+                .after(i * 60 * 1000)
                 .create();
-            PropertiesService.getScriptProperties().setProperty(_trigger.getUniqueId(), JSON.stringify(trigger));
+            console.info('new event', event.getUniqueId());
+            PropertiesService.getScriptProperties().setProperty(`t_${event.getUniqueId()}`, JSON.stringify(trigger));
+            i++;
         }
-    });
+    };
 }
 function runTrigger(event){
-    const trigger = JSON.parse(PropertiesService.getScriptProperties().getProperty(event.triggerUid));
+    console.info('rinning event', event.triggerUid);
+    const trigger = JSON.parse(PropertiesService.getScriptProperties().getProperty(`t_${event.triggerUid}`));
     console.log(trigger.uuid, '!');
     let query = properties.getQuery(trigger.uuid, trigger.spreadsheetId);
     console.log(trigger.uuid, 'getQuery', query);
