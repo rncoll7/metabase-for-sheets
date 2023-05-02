@@ -112,62 +112,27 @@ class Properties {
 
     // QUERY
     getQueries() {
-        const queries = this.document.getProperty('QUERIES');
-        if (queries != null && queries != undefined) {
-            return JSON.parse(queries);
-        } else {
-            return [];
-        }
-    }
-
-    setQueries(queries) {
-        this.document.setProperty('QUERIES', JSON.stringify(queries));
-    }
-
-    getQuery(uuid) {
-        const queries = this.getQueries();
-        return (function () {
-            for (var i = 0; i < queries.length; i++) {
-                if (queries[i].uuid == uuid) {
-                    return queries[i];
-                }
+        let queries = [];
+        for (const [key, query] of Object.entries(this.script.getProperties())) {
+            if (key.indexOf(`QUERY_${SpreadsheetApp.getActive().getId()}_`) > -1) {
+                queries.push(JSON.parse(query));
             }
-        })()
+        }
+        return queries;
     }
 
-    deleteQuery(uuid) {
-        const queries = this.getQueries();
-        const index = (function () {
-            for (var i = 0; i < queries.length; i++) {
-                if (queries[i].uuid == uuid) {
-                    return i;
-                }
-            }
-        })()
-        if (index > -1) {
-            queries.splice(index, 1);
-            this.setQueries(queries);
-            return true;
-        }
-        return false;
+    getQuery(uuid, spreadsheetId = SpreadsheetApp.getActive().getId()) {
+        return JSON.parse(this.script.getProperty(`QUERY_${spreadsheetId}_${uuid}`));
     }
 
-    setQuery(query) {
-        const uuid = query.uuid;
-        const queries = this.getQueries();
-        const index = (function () {
-            for (var i = 0; i < queries.length; i++) {
-                if (queries[i].uuid == uuid) {
-                    return i;
-                }
-            }
-        })();
-        if (index != null && index != undefined) {
-            queries[index] = query;
-        } else {
-            queries.push(query);
-        }
-        this.setQueries(queries);
+    deleteQuery(uuid, spreadsheetId = SpreadsheetApp.getActive().getId()) {
+        this.script.deleteProperty(`QUERY_${spreadsheetId}_${uuid}`);
+        console.info('deleteQuery', `QUERY_${spreadsheetId}_${uuid}`);
+    }
+
+    setQuery(query, spreadsheetId = SpreadsheetApp.getActive().getId()) {
+        this.script.setProperty(`QUERY_${spreadsheetId}_${query.uuid}`, JSON.stringify(query));
+        console.info(`QUERY_${spreadsheetId}_${query.uuid}`, JSON.stringify(query));
     }
 
 
@@ -180,11 +145,7 @@ class Properties {
                 triggers.push(JSON.parse(value));
             }
         }
-        if (triggers != null) {
-            return triggers;
-        } else {
-            return [];
-        }
+        return triggers;
     }
 
     getTrigger(uuid) {
@@ -193,11 +154,12 @@ class Properties {
 
     deleteTrigger(uuid) {
         this.script.deleteProperty(`TRIGGER_${uuid}`);
-        return true;
+        console.info('deleteTrigger', `TRIGGER_${uuid}`);
     }
 
     setTrigger(trigger) {
         this.script.setProperty(`TRIGGER_${trigger.uuid}`, JSON.stringify(trigger));
+        console.info('setTrigger', `TRIGGER_${trigger.uuid}`, JSON.stringify(trigger));
     }
 
     nedAuth() {
@@ -205,15 +167,26 @@ class Properties {
     }
 
     updateStorage(){
-        let version = this.document.getProperty('storage-version') || 0;
+        let version = parseInt(this.document.getProperty('storage-version') || 0);
         
-        if (version == 0) {
-            let queries = this.getQueries();
-            for (var i = 0; i < queries.length; i++) {
-                queries[i].uuid = Utilities.getUuid();
+        if (version === 0 || version === 1) {
+            let queries
+            const queries_text = this.document.getProperty('QUERIES');
+            if (queries_text != null) {
+                queries = JSON.parse(queries_text);
+            } else {
+                queries =  [];
             }
-            this.setQueries(queries);
-            version = 1;
+            for (let i = 0; i < queries.length; i++) {
+                if (queries[i].uuid == null){
+                    queries[i].uuid = Utilities.getUuid();
+                }
+            }
+
+            for (const query of queries) {
+                this.setQuery(query);
+            }
+            version = 2;
         }
     }
 
@@ -227,9 +200,4 @@ function deleteTest() {
     const uuid = '7795d6c4-ce96-4009-9879-015452902197'
     const ok = properties.deleteQuery(uuid);
     return ok;
-}
-
-
-function test(){
-    properties.getScripttProperty()
 }

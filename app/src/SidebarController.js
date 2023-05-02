@@ -74,9 +74,10 @@ function processEditForm(object) {
             "sheet": object.sheet,
             "range": object.range,
             "hour": object.hour,
-            "active": object.active === 'on',
+            "active": object.active === 'true',
             "parameters": []
         }
+        console.log('active', object.active, query.active);
     
         const parameters = JSON.parse(object.parameters || '[]');
         for (let i = 0; i < parameters.length; i++) {
@@ -136,15 +137,6 @@ function feachQueries() {
 function feachQueryDetails(id) {
     try {
         return Core.getQuestionDetailsSimplified(id);        
-    } catch (e) {
-        openErrorDialog(e);
-        return false;
-    }
-}
-
-function clean() {
-    try {
-        properties.setQueries([]);        
     } catch (e) {
         openErrorDialog(e);
         return false;

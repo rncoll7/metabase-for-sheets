@@ -125,7 +125,7 @@
                             </div>
                             <div class="media-body mb-0 small lh-125 col-4">
                                 <div class="form-check" style="margin-top: 35px;">
-                                    <input class="form-check-input" type="checkbox" id="active" name="active">
+                                    <input class="form-check-input" type="checkbox" id="active" name="active" value="true">
                                     <label class="form-check-label" for="active">Ativo</label>
                                 </div>
                             </div>
@@ -371,7 +371,7 @@
             if (object.sheet || object.id == undefined) document.querySelector('#sheet').value = object.sheet || '';
             if (object.range || object.id == undefined) document.querySelector('#range').value = object.range || '';
             if (object.hour || object.id == undefined) document.querySelector('#hour').value = object.hour || '';
-            if (object.active || object.id == undefined) document.querySelector('#active').value = object.active || false;
+            if (object.active || object.id == undefined) document.querySelector('#active').checked = object.active || false;
             const parameters = object.parameters || [];
             document.querySelector('#parameters').value = JSON.stringify(parameters);
             const element = document.querySelector('#query-parameters');

@@ -1,15 +1,9 @@
 function onInstall() {
     onOpen();
-
-    if (ScriptApp.getProjectTriggers().length <= 0) {
-        ScriptApp.newTrigger('runTriggers')
-            .timeBased()
-            .everyHours(1)
-            .create();
-    }
 }
 
 function onOpen() {
+
     let ui = SpreadsheetHelper.getUi();
     if (ui !== undefined) {
         let menu = ui.createMenu("Metabase");
@@ -35,17 +29,16 @@ function openSideBar() {
 function runTriggers(){
     const currentHour = new Date().getHours() + (new Date().getTimezoneOffset()/60-3);
     properties.getTriggers().forEach(trigger => {
-        console.log(currentHour, trigger.hour, trigger.uuid);
-        if(currentHour === trigger.hour){
-            let spreadsheet =  SpreadsheetApp.openById(trigger.spreadsheetId);
-            PropertiesService.getDocumentProperties(spreadsheet)
-
+        console.log(currentHour, trigger.hour, trigger.uuid, trigger.spreadsheetId);
+        if(currentHour === parseInt(trigger.hour)){
             try {
-                let query = properties.getQuery(trigger.uuid);
-                return Core.getQuestionAndFillSheet(query);
+                console.log(trigger.uuid, '!');
+                let query = properties.getQuery(trigger.uuid, trigger.spreadsheetId);
+                console.log(trigger.uuid, 'getQuery', query);
+                Core.getQuestionAndFillSheet(query, trigger.spreadsheetId);
+                console.log(trigger.uuid, 'end');
             } catch (e) {
-                openErrorDialog(e);
-                return false;
+                console.error(trigger.uuid, e);
             }
         }
     });
@@ -85,9 +78,9 @@ class Core {
         return token;
     }
 
-    static getQuestionAndFillSheet(query) {
+    static getQuestionAndFillSheet(query, spreadsheetId = SpreadsheetApp.getActive().getId()) {
         var values = this.getQuestion(query);
-        this.fillSheet(values, query);
+        this.fillSheet(values, query, spreadsheetId);
     }
 
     static getQuestionAndFillSheetLegacy(query) {
@@ -171,8 +164,8 @@ class Core {
             .setValues(rows);
     }
 
-    static fillSheet(values, query) {
-        const sheet = SpreadsheetHelper.getSheet(query.sheet);
+    static fillSheet(values, query, spreadsheetId) {
+        const sheet = SpreadsheetHelper.getSheet(query.sheet, SpreadsheetHelper.getSpreadsheet(spreadsheetId));
         const cols = values.data.cols;
         const rows = values.data.rows;
         const types = [];
