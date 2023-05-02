@@ -4,7 +4,7 @@ function onInstall() {
 
 function onOpen() {
 
-    let ui = SpreadsheetHelper.getUi();
+    let ui = SpreadsheetApp.getUi();
     if (ui !== undefined) {
         let menu = ui.createMenu("Metabase");
         try {
@@ -31,22 +31,35 @@ function runTriggers(){
     properties.getTriggers().forEach(trigger => {
         console.log(currentHour, trigger.hour, trigger.uuid, trigger.spreadsheetId);
         if(currentHour === parseInt(trigger.hour)){
-            try {
-                console.log(trigger.uuid, '!');
-                let query = properties.getQuery(trigger.uuid, trigger.spreadsheetId);
-                console.log(trigger.uuid, 'getQuery', query);
-                Core.getQuestionAndFillSheet(query, trigger.spreadsheetId);
-                console.log(trigger.uuid, 'end');
-            } catch (e) {
-                console.error(trigger.uuid, e);
-            }
+            const _trigger = ScriptApp.newTrigger("runTrigger").timeBased()
+                .after(5 * 1000)
+                .create();
+            PropertiesService.getScriptProperties().setProperty(_trigger.getUniqueId(), JSON.stringify(trigger));
         }
     });
+}
+function runTrigger(event){
+    const trigger = JSON.parse(PropertiesService.getScriptProperties().getProperty(event.triggerUid));
+    console.log(trigger.uuid, '!');
+    let query = properties.getQuery(trigger.uuid, trigger.spreadsheetId);
+    console.log(trigger.uuid, 'getQuery', query);
+    Core.getQuestionAndFillSheet(query, trigger.spreadsheetId);
+    console.log(trigger.uuid, 'end');
+
+
+    if (!ScriptApp.getProjectTriggers().some(function (trigger) {
+        if (trigger.getUniqueId() === event.triggerUid) {
+            ScriptApp.deleteTrigger(trigger);
+        }
+    })) {
+        console.error("Could not find trigger with id '%s'", event.triggerUid);
+    }
+    PropertiesService.getScriptProperties().deleteProperty(event.triggerUid);
 }
 
 class Core {
     static getSheetNumbers() {
-        var sheets = SpreadsheetHelper.getSheets();
+        var sheets = SpreadsheetApp.getActive().getSheets();
         var questionNumbers = [];
         for (var i in sheets) {
             var sheetName = sheets[i].getName();
@@ -83,9 +96,9 @@ class Core {
         this.fillSheet(values, query, spreadsheetId);
     }
 
-    static getQuestionAndFillSheetLegacy(query) {
+    static getQuestionAndFillSheetLegacy(query, spreadsheetId = SpreadsheetApp.getActive().getId()) {
         var values = this.getQuestion(query, "csv");
-        this.fillSheetFromCsv(values, query);
+        this.fillSheetFromCsv(values, query, spreadsheetId);
     }
 
     static getQuestion(query, output = "json") {
@@ -151,8 +164,8 @@ class Core {
         return { id: id, name: name, parameters: parameters };
     }
 
-    static fillSheetFromCsv(values, query) {
-        const sheet = SpreadsheetHelper.getSheet(query.sheet);
+    static fillSheetFromCsv(values, query, spreadsheetId) {
+        const sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName(query.sheet)
         const rows = values;
         const header = rows[0];
 
@@ -165,7 +178,7 @@ class Core {
     }
 
     static fillSheet(values, query, spreadsheetId) {
-        const sheet = SpreadsheetHelper.getSheet(query.sheet, SpreadsheetHelper.getSpreadsheet(spreadsheetId));
+        const sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName(query.sheet)
         const cols = values.data.cols;
         const rows = values.data.rows;
         const types = [];

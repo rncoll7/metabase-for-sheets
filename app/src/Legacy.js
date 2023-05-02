@@ -1,3 +1,11 @@
+
+function alert() {
+    const ui = SpreadsheetApp.getUi()
+    if (ui != null) {
+        return ui.alert.apply(this, arguments);
+    }
+}
+
 function importQuestion() {
 
     var metabaseQuestionNum = Browser.inputBox('Metabase question number (This will replace all data in the current tab with the result)', Browser.Buttons.OK_CANCEL);
@@ -6,16 +14,16 @@ function importQuestion() {
         try {
             Core.getQuestionAndFillSheetLegacy({"id": metabaseQuestionNum, "parameters": []});
             Core.logSuccess('importQuestion', {"metabaseQuestionNum": metabaseQuestionNum});
-            SpreadsheetHelper.alert('Question ' + metabaseQuestionNum + ' successfully imported.');
+            alert('Question ' + metabaseQuestionNum + ' successfully imported.');
         } catch (e) {
             Core.logError('importQuestion', {"metabaseQuestionNum": metabaseQuestionNum}, e);
-            SpreadsheetHelper.alert('Question ' + metabaseQuestionNum + ' failed to import. ' + status.error);
+            alert('Question ' + metabaseQuestionNum + ' failed to import. ' + status.error);
         }
 
     } else if (metabaseQuestionNum == 'cancel') {
-        SpreadsheetHelper.alert('You have canceled.');
+        alert('You have canceled.');
     } else {
-        SpreadsheetHelper.alert('You did not enter a number.');
+        alert('You did not enter a number.');
     }
 }
 
