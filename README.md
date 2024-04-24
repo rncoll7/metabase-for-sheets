@@ -19,7 +19,7 @@ token.
 ## I'm currently working on:
 
 - Interface response
-- Schedule job
+- Schedule job (implemented, but script run only for 6 minutes)
 
 ## How to use
 
