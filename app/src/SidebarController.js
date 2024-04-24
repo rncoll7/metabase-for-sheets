@@ -1,11 +1,16 @@
 function openErrorDialog(e){
     let html = '';
+    let style = 'width: 98%;resize: none;overflow: hidden;border: 0px;background: #ddd;border-radius: 5px;'
     if (e.name === 'MetabaseError'){
-        html += `<p><code>${e.status} - ${e.payload}</code></p>`;
+        html += `<code>HTTP Status Code: ${e.status}</code><br/><code>Origin IP: ${ipify()}</code><br/>`;
+    }
+    if (e.payload != null){
+        html += `<code>Payload:</code><textarea style="min-height: 62px;${style}" readonly>${e.payload}</textarea>`;
     }
     if (e.stack != null){
-        html += `<p><code style="white-space: pre-wrap;">${e.stack}/<code></p>`;
+        html += `<code>Trace:</code><textarea style="min-height: 117px;${style}" readonly>${e.stack}</textarea>`;
     }
+    html += `</p>`;
 
     try {
         const ui = SpreadsheetApp.getUi();
@@ -18,6 +23,18 @@ function openErrorDialog(e){
             inputs: {message: e.message, stack: e.stack},
             error: {message: error.message, stack: error.stack},
         });
+    }
+}
+
+function ipify(){
+    try{
+        var response = UrlFetchApp.fetch("https://api.ipify.org");
+        if (response.getResponseCode() !== 200){
+            return "";
+        }
+        return response.getContentText()
+    } catch(e){
+        return "";
     }
 }
 
