@@ -16,10 +16,17 @@ and [gets a token](https://github.com/metabase/metabase/wiki/Using-the-REST-API#
 make requests. If the token is expired (after a certain period of time it will expire) then the script requests a new
 token.
 
-I'm currently working on:
+## I'm currently working on:
 
 - Interface response
 - Schedule job
+
+## How to use
+
+You can use this as a sheets addon or as a script in a single sheets file.
+
+- [DEVELOPER MODE](DEVELOPER.md)
+- [PRODUCTION MODE](PRODUCTION.md)
 
 ## Links:
 
@@ -27,5 +34,5 @@ I'm currently working on:
 - https://github.com/google/clasp/blob/master/docs/run.md#prerequisites
 - https://console.cloud.google.com/apis/credentials
 - https://console.cloud.google.com/apis/credentials/consent
-- https://docs.google.com/spreadsheets/d/104Cxi5PJh2pdK2osMIeMtBWnamJIpQt6oFVpD47BPiE
-- https://script.google.com/home/projects/1qNrGXpMgntO2NTRdlTWeXvTEfRdOFA6MVgZqBqhw0a-xxhN5ui7zQw5c
+- https://developers.google.com/apps-script/add-ons/how-tos/publish-add-on-overview
+- https://developers.google.com/workspace/marketplace/how-to-publish

@@ -3,4 +3,6 @@ node_modules
 .clasprc.json
 .clasprc.prod.json
 .client_credentials.json
+package-lock.json
+yarn.lock
 yarn-error.log

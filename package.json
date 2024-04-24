@@ -4,12 +4,14 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "autorize": "clasp login --auth .clasprc.json",
-    "autorize.prod": "clasp login --auth .clasprc.prod.json",
+    "authorize": "clasp login --auth .clasprc.json",
+    "push": "clasp push --project .clasp.json --auth .clasprc.json",
     "status": "clasp status --auth .clasprc.json",
     "watch": "clasp push --watch --auth .clasprc.json",
-    "deploy": "clasp push --project .clasp.prod.json --auth .clasprc.prod.json",
-    "debug": "clasp run --auth .clasprc.json"
+    "debug": "clasp run --auth .clasprc.json",
+
+    "authorize.prod": "clasp login --auth .clasprc.prod.json",
+    "push.prod": "clasp push --project .clasp.prod.json --auth .clasprc.prod.json"
   },
   "devDependencies": {
     "@google/clasp": "^2.4.1",
